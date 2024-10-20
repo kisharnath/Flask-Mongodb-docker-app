@@ -1,2 +1,5 @@
 flask-restful
-
+flask==2.2.5
+pymongo[srv]
+python-dotenv
+flask_bcrypt 
