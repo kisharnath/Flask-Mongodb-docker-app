@@ -15,6 +15,9 @@ class Endpoints(Resource):
         result = []
         for document in items:
             document['_id'] = str(document['_id'])  # Convert ObjectId to string
+            for key, value in document.items():
+                if isinstance(value, bytes):
+                    document[key] = value.decode('utf-8')
             result.append(document)
         return jsonify(result)
     
@@ -93,7 +96,8 @@ class SecondEndpoints(Resource):
         new_password =request.form.get('New_password')
         new_hashing_passowrd = bcrypt_.generate_password_hash(new_password)
         user_exist = collection.find_one({"_id":ObjectId(user_id)})
-        if user_exist :
+        email_exist = collection.find_one({"email":email})
+        if user_exist and not email_exist :
             update = collection.update_one(
                 {"_id":ObjectId(user_id)},
                 {"$set": {"name": name,"email":email,"password":new_hashing_passowrd}} 
@@ -101,7 +105,7 @@ class SecondEndpoints(Resource):
             return {'message': 'Successfully update Name and Password'}, 201 
         else :
 
-            return {'message': 'No user found ' }, 401 
+            return {'message': 'No user found or email already exist' }, 401 
              
      def delete(self,user_id):
         user_exist = collection.find_one({"_id":ObjectId(user_id)})
