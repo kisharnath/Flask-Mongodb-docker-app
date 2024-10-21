@@ -5,8 +5,8 @@ from .bcrypt import bcrypt_
 from bson.objectid import ObjectId
 
 client  = getDb()
-db = client['UserDatabse']  
-collection = db['My-database']  
+db = client['UserDatabse']  # Your database name
+collection = db['My-database']  # Your database collection
 
 class Endpoints(Resource):
 
